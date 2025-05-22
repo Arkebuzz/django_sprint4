@@ -1,3 +1,4 @@
+from datetime import date
 from django import forms
 
 from .models import Post, Comment, User
@@ -7,6 +8,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = ('author',)
+        widgets = {
+            'pub_date': forms.DateInput(
+                attrs={'type': 'date', 'min': date.today().isoformat()}
+            )
+        }
 
 
 class CommentForm(forms.ModelForm):
