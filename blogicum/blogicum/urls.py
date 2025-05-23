@@ -4,10 +4,17 @@ from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import include, path, reverse_lazy
 from django.views.generic.edit import CreateView
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('', include('blog.urls', namespace='blog')),
-    path('pages/', include('pages.urls', namespace='pages')),
+    path(
+        'admin/login/',
+        RedirectView.as_view(
+            url=settings.LOGIN_URL, permanent=True, query_string=True
+        )
+    ),
+    path('admin/', admin.site.urls),
     path('auth/', include('django.contrib.auth.urls')),
     path(
         'auth/registration/',
@@ -18,15 +25,15 @@ urlpatterns = [
         ),
         name='registration',
     ),
-    path('admin/', admin.site.urls),
+    path('pages/', include('pages.urls', namespace='pages')),
 ]
 
-handler403 = 'pages.views.page403'
 handler404 = 'pages.views.page404'
 handler500 = 'pages.views.page500'
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls))
     ]

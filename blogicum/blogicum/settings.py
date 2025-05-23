@@ -14,6 +14,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+INTERNAL_IPS = ['127.0.0.1']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,7 +42,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-INTERNAL_IPS = ['127.0.0.1']
+CSRF_FAILURE_VIEW = 'pages.views.page403'
 
 ROOT_URLCONF = 'blogicum.urls'
 
@@ -116,7 +118,7 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
-LOGIN_URL = 'login'
+LOGIN_URL = '/auth/login/'
 
 LOGIN_REDIRECT_URL = 'blog:index'
 

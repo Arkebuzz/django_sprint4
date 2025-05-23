@@ -79,12 +79,14 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     """Создание поста."""
-    form = PostForm(request.POST or None, request.FILES or None)
+    form = PostForm(
+        request.POST or None,
+        request.FILES or None,
+        author=request.user
+    )
 
     if form.is_valid():
-        post = form.save(commit=False)
-        post.author = request.user
-        post.save()
+        form.save()
         return redirect('blog:profile', request.user.username)
 
     context = {'form': form}
@@ -102,7 +104,8 @@ def post_edit(request, post_id):
     form = PostForm(
         request.POST or None,
         request.FILES or None,
-        instance=post
+        instance=post,
+        edit=True
     )
 
     if form.is_valid():
@@ -166,13 +169,14 @@ def profile_edit(request):
 def comment_add(request, post_id):
     """Добавление комментария."""
     post = get_object_or_404(Post, pk=post_id)
-    form = CommentForm(request.POST or None)
+    form = CommentForm(
+        request.POST or None,
+        author=request.user,
+        post=post,
+    )
 
     if form.is_valid():
-        comment = form.save(commit=False)
-        comment.author = request.user
-        comment.post = post
-        comment.save()
+        form.save()
 
     return redirect('blog:post_detail', post_id)
 
