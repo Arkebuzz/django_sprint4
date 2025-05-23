@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import Category, Location, Post, Comment
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -24,6 +25,7 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -41,6 +43,7 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -57,9 +60,6 @@ class PostAdmin(admin.ModelAdmin):
     )
     search_fields = (
         'title',
-        'author',
-        'location',
-        'category',
     )
     list_filter = (
         'is_published',
@@ -73,6 +73,7 @@ class PostAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'post',
@@ -80,17 +81,3 @@ class CommentAdmin(admin.ModelAdmin):
         'author',
         'created_at',
     )
-    list_editable = (
-    )
-    search_fields = (
-        'post',
-        'author',
-    )
-    list_filter = (
-    )
-
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(Post, PostAdmin)
-admin.site.register(Comment, CommentAdmin)

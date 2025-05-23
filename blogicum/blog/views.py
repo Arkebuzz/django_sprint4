@@ -13,6 +13,7 @@ User = get_user_model()
 
 
 def get_all_posts(default_filter=True, comments=True, **kwargs):
+    """Получение списка постов."""
     if default_filter:
         kwargs |= {
             'is_published': True,
@@ -31,6 +32,7 @@ def get_all_posts(default_filter=True, comments=True, **kwargs):
 
 
 def get_paginator(request, queryset):
+    """Использование пагинатора."""
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     posts = paginator.get_page(page_number)
@@ -38,6 +40,7 @@ def get_paginator(request, queryset):
 
 
 def index(request):
+    """Главная страница."""
     posts = get_all_posts()
     posts = get_paginator(request, posts)
     context = {'page_obj': posts}
@@ -45,6 +48,7 @@ def index(request):
 
 
 def category_posts(request, slug):
+    """Страница категории."""
     category = get_object_or_404(Category, slug=slug, is_published=True)
     posts = get_all_posts(category=category.id)
     posts = get_paginator(request, posts)
@@ -53,6 +57,7 @@ def category_posts(request, slug):
 
 
 def post_detail(request, post_id):
+    """Страница поста."""
     post = get_object_or_404(Post, pk=post_id)
 
     if request.user != post.author and not (
@@ -73,6 +78,7 @@ def post_detail(request, post_id):
 
 @login_required
 def post_create(request):
+    """Создание поста."""
     form = PostForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -87,6 +93,7 @@ def post_create(request):
 
 @login_required
 def post_edit(request, post_id):
+    """Редактирование поста."""
     post = get_object_or_404(Post, pk=post_id)
 
     if post.author != request.user:
@@ -108,6 +115,7 @@ def post_edit(request, post_id):
 
 @login_required
 def post_delete(request, post_id):
+    """Удаление поста."""
     post = get_object_or_404(Post, id=post_id)
 
     if request.user != post.author:
@@ -123,6 +131,7 @@ def post_delete(request, post_id):
 
 
 def profile_detail(request, username):
+    """Страница профиля пользователя."""
     profile = get_object_or_404(User, username=username)
 
     if profile == request.user:
@@ -137,6 +146,7 @@ def profile_detail(request, username):
 
 @login_required
 def profile_edit(request):
+    """Изменение профиля."""
     profile = get_object_or_404(User, username=request.user.username)
 
     if request.user != profile:
@@ -154,7 +164,7 @@ def profile_edit(request):
 
 @login_required
 def comment_add(request, post_id):
-    """Добавление комментария к публикации"""
+    """Добавление комментария."""
     post = get_object_or_404(Post, pk=post_id)
     form = CommentForm(request.POST or None)
 
@@ -169,6 +179,7 @@ def comment_add(request, post_id):
 
 @login_required
 def comment_edit(request, post_id, comment_id):
+    """Изменения комментария."""
     comment = get_object_or_404(Comment, pk=comment_id)
 
     if comment.author != request.user:
@@ -186,6 +197,7 @@ def comment_edit(request, post_id, comment_id):
 
 @login_required
 def comment_delete(request, post_id, comment_id):
+    """Удаление комментария."""
     comment = get_object_or_404(Comment, pk=comment_id)
 
     if comment.author != request.user:
